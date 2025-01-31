@@ -9,9 +9,36 @@ use Illuminate\Http\Request;
 class PropertyController extends Controller
 {
     // List all properties
-    public function index()
+    // public function index()
+    // {
+    //     $properties = Property::with('categories', 'images')->get();
+    //     return view('properties.index', compact('properties'));
+    // }
+    public function index(Request $request)
     {
-        $properties = Property::with('categories', 'images')->get();
+        $query = Property::query();
+
+        // Filter by location
+        if ($request->has('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        // Filter by property type
+        if ($request->has('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        // Filter by price range
+        if ($request->has('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+
+        if ($request->has('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
+        $properties = $query->with('images')->paginate(9);
+
         return view('properties.index', compact('properties'));
     }
 
@@ -97,7 +124,33 @@ class PropertyController extends Controller
 
         return redirect()->route('properties.index')->with('success', 'Property updated successfully.');
     }
+    public function search(Request $request)
+    {
+        $query = Property::query();
 
+        // Filter by location
+        if ($request->has('location')) {
+            $query->where('location', 'like', '%' . $request->input('location') . '%');
+        }
+
+        // Filter by property type
+        if ($request->has('type')) {
+            $query->where('type', $request->input('type'));
+        }
+
+        // Filter by price range
+        if ($request->has('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+
+        if ($request->has('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
+        $properties = $query->with('images')->paginate(9);
+
+        return view('properties.index', compact('properties'));
+    }
     // Delete a property
     public function destroy(Property $property)
     {
