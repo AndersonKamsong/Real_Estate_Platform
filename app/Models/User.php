@@ -51,4 +51,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(SavedSearch::class);
     }
+    public function inquiries()
+    {
+        return $this->hasManyThrough(
+            Inquiry::class, // Target model
+            Property::class, // Intermediate model
+            'user_id', // Foreign key on the intermediate model (properties table)
+            'property_id', // Foreign key on the target model (inquiries table)
+            'id', // Local key on the user model
+            'id' // Local key on the intermediate model (properties table)
+        );
+    }
 }
+

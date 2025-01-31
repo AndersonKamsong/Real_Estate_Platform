@@ -71,7 +71,37 @@ Route::middleware('auth')->group(function () {
     Route::delete('/saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy'])->name('saved-searches.destroy');
 });
 
+use App\Http\Controllers\Agent\DashboardController;
+use App\Http\Controllers\Agent\PropertyController as  AgentPropertyController;
+use App\Http\Controllers\Agent\InquiryController;
+use App\Http\Controllers\Agent\TransactionController as AgentTransactionController;
 
+// Agent Routes
+Route::prefix('agent')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('agent.dashboard');
+    // Route::get('/properties', [AgentPropertyController::class, 'index'])->name('agent.properties.index');
+    // Route::resource('/properties', AgentPropertyController::class)->except(['show']);
+
+    // List all properties
+    Route::get('/properties', [AgentPropertyController::class, 'index'])->name('agent.properties.index');
+
+    // Show form to create a new property
+    Route::get('/properties/create', [AgentPropertyController::class, 'create'])->name('agent.properties.create');
+
+    // Store new property
+    Route::post('/properties', [AgentPropertyController::class, 'store'])->name('agent.properties.store');
+
+    // Show form to edit a property
+    Route::get('/properties/{property}/edit', [AgentPropertyController::class, 'edit'])->name('agent.properties.edit');
+
+    // Update property
+    Route::put('/properties/{property}', [AgentPropertyController::class, 'update'])->name('agent.properties.update');
+
+    // Delete property
+    Route::delete('/properties/{property}', [AgentPropertyController::class, 'destroy'])->name('agent.properties.destroy');
+    Route::get('/inquiries', [InquiryController::class, 'index'])->name('agent.inquiries');
+    Route::get('/transactions', [AgentTransactionController::class, 'index'])->name('agent.transactions');
+});
 
 
 
