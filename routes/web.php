@@ -8,6 +8,10 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AboutController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\BuyerController;
+use App\Http\Controllers\FavoriteController;
+use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\ViewHistoryController;
+use App\Http\Controllers\SavedSearchController;
 
 // Route::get('/', function () {
 //     return view('welcome');
@@ -33,9 +37,6 @@ Route::post('/properties', [PropertyController::class, 'index'])->name('properti
 
 // Property Details Page
 Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
-// Rent/Buy Routes
-Route::post('/properties/{property}/rent', [PropertyController::class, 'rent'])->name('properties.rent')->middleware('auth');
-Route::post('/properties/{property}/buy', [PropertyController::class, 'buy'])->name('properties.buy')->middleware('auth');
 // About Us Page
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 
@@ -45,22 +46,33 @@ Route::post('/contact', [ContactController::class, 'submit'])->name('contact.sub
 
 
 Route::middleware('auth')->group(function () {
-    // Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->name('buyer.dashboard');
-    // Route::get('/buyer/favorites', [BuyerController::class, 'favorites'])->name('buyer.favorites');
-    // Route::get('/buyer/view-history', [BuyerController::class, 'viewHistory'])->name('buyer.view-history');
-    // Route::get('/buyer/saved-searches', [BuyerController::class, 'savedSearches'])->name('buyer.saved-searches');
-    
+    // Rent/Buy Routes
+    Route::post('/properties/{property}/rent', [PropertyController::class, 'rent'])->name('properties.rent');
+    Route::post('/properties/{property}/buy', [PropertyController::class, 'buy'])->name('properties.buy');
     // Buyer Dashboard
     Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->name('buyer.dashboard');
     // Favorites
     Route::get('/buyer/favorites', [BuyerController::class, 'favorites'])->name('buyer.favorites');
     // View History
     Route::get('/buyer/view-history', [BuyerController::class, 'viewHistory'])->name('buyer.view-history');
-    // Saved Searches
-    Route::get('/buyer/saved-searches', [BuyerController::class, 'savedSearches'])->name('buyer.saved-searches');
     // Inquiry
     Route::get('/properties/{property}/inquiry', [BuyerController::class, 'inquiry'])->name('buyer.inquiry');
+    // Transaction Routes
+    Route::get('/buyer/transactions', [TransactionController::class, 'index'])->name('buyer.transactions');
     Route::post('/inquiries', [BuyerController::class, 'storeInquiry'])->name('inquiries.store');
+    // Favorite Routes
+    Route::post('/favorites/add/{property}', [FavoriteController::class, 'add'])->name('favorites.add');
+    Route::delete('/favorites/remove/{property}', [FavoriteController::class, 'remove'])->name('favorites.remove');
+    // View History Routes
+    Route::get('/buyer/view-history', [ViewHistoryController::class, 'index'])->name('buyer.view-history');
+    // Saved Search Routes
+    Route::get('/buyer/saved-searches', [SavedSearchController::class, 'index'])->name('buyer.saved-searches');
+    Route::post('/saved-searches', [SavedSearchController::class, 'store'])->name('saved-searches.store');
+    Route::delete('/saved-searches/{savedSearch}', [SavedSearchController::class, 'destroy'])->name('saved-searches.destroy');
 });
 
-require __DIR__.'/auth.php';
+
+
+
+
+require __DIR__ . '/auth.php';

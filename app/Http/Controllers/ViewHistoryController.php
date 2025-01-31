@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ViewHistory;
-use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ViewHistoryController extends Controller
 {
-    // Track a property view
-    public function store(Request $request, Property $property)
+    // Display the buyer's view history
+    public function index()
     {
-        $request->user()->viewHistory()->create(['property_id' => $property->id]);
-        return redirect()->back();
+        $viewHistory = Auth::user()->viewHistory()->with('property')->latest()->get();
+        return view('buyer.view-history', compact('viewHistory'));
     }
 }

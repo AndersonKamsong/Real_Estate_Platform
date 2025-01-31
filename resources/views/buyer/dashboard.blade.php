@@ -48,7 +48,7 @@
                     <ul>
                         @foreach($savedSearches as $search)
                         <li class="mb-2">
-                            <a href="{{ route('properties.index', $search->criteria) }}" class="text-blue-500 hover:underline">
+                            <a href="{{ route('properties.index', json_decode($search->criteria, true)) }}" class="text-blue-500 hover:underline">
                                 {{ $search->name }}
                             </a>
                         </li>

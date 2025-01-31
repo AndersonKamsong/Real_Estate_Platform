@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -14,6 +15,7 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
         <!-- Navigation -->
@@ -42,6 +44,9 @@
                             <x-nav-link :href="route('buyer.saved-searches')" :active="request()->routeIs('buyer.saved-searches')">
                                 {{ __('Saved Searches') }}
                             </x-nav-link>
+                            <x-nav-link :href="route('buyer.transactions')" :active="request()->routeIs('buyer.transactions')">
+                                {{ __('Transactions') }}
+                            </x-nav-link>
                         </div>
                     </div>
 
@@ -66,7 +71,7 @@
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout')"
-                                            onclick="event.preventDefault();
+                                        onclick="event.preventDefault();
                                                         this.closest('form').submit();">
                                         {{ __('Log Out') }}
                                     </x-dropdown-link>
@@ -84,4 +89,5 @@
         </main>
     </div>
 </body>
+
 </html>

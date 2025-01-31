@@ -19,31 +19,51 @@
             <div>
                 <div class="grid grid-cols-2 gap-4 mb-6">
                     @if($property->images->isNotEmpty())
-                    @foreach($property->images as $image)
-                    <img src="{{ asset($image->image_path) }}" alt="Property Image" class="w-full h-48 object-cover rounded">
-                    @endforeach
+                        @foreach($property->images as $image)
+                            <img src="{{ asset($image->image_path) }}" alt="Property Image" class="w-full h-48 object-cover rounded">
+                        @endforeach
                     @else
-                    <div class="col-span-2 bg-gray-200 p-6 text-center rounded">
-                        <span class="text-gray-500">No Images Available</span>
-                    </div>
+                        <div class="col-span-2 bg-gray-200 p-6 text-center rounded">
+                            <span class="text-gray-500">No Images Available</span>
+                        </div>
                     @endif
                 </div>
 
                 <!-- Rent/Buy Buttons -->
                 @if($property->status === 'available')
-                <form action="{{ route('properties.rent', $property->id) }}" method="POST" class="mb-4">
-                    @csrf
-                    <button type="submit" class="w-full bg-green-500 text-white p-2 rounded">Rent This Property</button>
-                </form>
-                <form action="{{ route('properties.buy', $property->id) }}" method="POST">
-                    @csrf
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Buy This Property</button>
-                </form>
+                    <form action="{{ route('properties.rent', $property->id) }}" method="POST" class="mb-4">
+                        @csrf
+                        <button type="submit" class="w-full bg-green-500 text-white p-2 rounded">Rent This Property</button>
+                    </form>
+                    <form action="{{ route('properties.buy', $property->id) }}" method="POST" class="mb-4">
+                        @csrf
+                        <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded">Buy This Property</button>
+                    </form>
                 @else
-                <div class="bg-gray-200 p-4 text-center rounded">
-                    <span class="text-gray-600">This property is no longer available.</span>
-                </div>
+                    <div class="bg-gray-200 p-4 text-center rounded">
+                        <span class="text-gray-600">This property is no longer available.</span>
+                    </div>
                 @endif
+
+                <!-- Favorite Button -->
+                @auth
+                    @if($property->isFavoritedBy(auth()->user()))
+                        <form action="{{ route('favorites.remove', $property->id) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="w-full bg-red-500 text-white p-2 rounded">Remove from Favorites</button>
+                        </form>
+                    @else
+                        <form action="{{ route('favorites.add', $property->id) }}" method="POST">
+                            @csrf
+                            <button type="submit" class="w-full bg-yellow-500 text-white p-2 rounded">Add to Favorites</button>
+                        </form>
+                    @endif
+                @else
+                    <div class="bg-gray-200 p-4 text-center rounded">
+                        <span class="text-gray-600">You must be logged in to add this property to favorites.</span>
+                    </div>
+                @endauth
             </div>
         </div>
     </div>

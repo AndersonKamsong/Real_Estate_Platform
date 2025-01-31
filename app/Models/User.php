@@ -47,4 +47,8 @@ class User extends Authenticatable
     {
         return $this->hasMany(Transaction::class);
     }
+    public function savedSearches()
+    {
+        return $this->hasMany(SavedSearch::class);
+    }
 }

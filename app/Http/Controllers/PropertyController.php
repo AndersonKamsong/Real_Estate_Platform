@@ -7,7 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
-
+use App\Models\ViewHistory;
 
 class PropertyController extends Controller
 {
@@ -17,6 +17,8 @@ class PropertyController extends Controller
     //     $properties = Property::with('categories', 'images')->get();
     //     return view('properties.index', compact('properties'));
     // }
+
+
     public function index(Request $request)
     {
         $query = Property::query();
@@ -26,23 +28,37 @@ class PropertyController extends Controller
             $query->where('location', 'like', '%' . $request->input('location') . '%');
         }
 
+        // Filter by price range
+        if ($request->has('min_price')) {
+            $query->where('price', '>=', $request->input('min_price'));
+        }
+        if ($request->has('max_price')) {
+            $query->where('price', '<=', $request->input('max_price'));
+        }
+
         // Filter by property type
         if ($request->has('type')) {
             $query->where('type', $request->input('type'));
         }
 
-        // Filter by price range
-        if ($request->has('min_price')) {
-            $query->where('price', '>=', $request->input('min_price'));
-        }
-
-        if ($request->has('max_price')) {
-            $query->where('price', '<=', $request->input('max_price'));
-        }
-
         $properties = $query->with('images')->paginate(9);
 
         return view('properties.index', compact('properties'));
+    }
+
+    // Other methods...
+    public function show(Property $property)
+    {
+        // Record the view history if the user is authenticated
+        if (Auth::check()) {
+            ViewHistory::create([
+                'user_id' => Auth::id(),
+                'property_id' => $property->id,
+                'viewed_at' => now(),
+            ]);
+        }
+
+        return view('properties.show', compact('property'));
     }
 
     // Show the form for creating a new property
@@ -84,11 +100,11 @@ class PropertyController extends Controller
         return redirect()->route('properties.index')->with('success', 'Property created successfully.');
     }
 
-    // Show a specific property
-    public function show(Property $property)
-    {
-        return view('properties.show', compact('property'));
-    }
+    // // Show a specific property
+    // public function show(Property $property)
+    // {
+    //     return view('properties.show', compact('property'));
+    // }
 
     // Show the form for editing a property
     public function edit(Property $property)

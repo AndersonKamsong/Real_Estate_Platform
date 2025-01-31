@@ -17,16 +17,21 @@
                 </div>
             </div>
         </form>
-
+        <form action="{{ route('saved-searches.store') }}" method="POST" class="mb-6">
+            @csrf
+            <input type="hidden" name="name" value="My Search">
+            <input type="hidden" name="criteria" value="{{ json_encode(request()->all()) }}">
+            <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded">Save Search</button>
+        </form>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             @foreach($properties as $property)
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
                 @if($property->images->isNotEmpty())
-                    <img src="{{ asset($property->images->first()->image_path) }}" alt="{{ $property->title }}" class="w-full h-48 object-cover">
+                <img src="{{ asset($property->images->first()->image_path) }}" alt="{{ $property->title }}" class="w-full h-48 object-cover">
                 @else
-                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
-                        <span class="text-gray-500">No Image Available</span>
-                    </div>
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center">
+                    <span class="text-gray-500">No Image Available</span>
+                </div>
                 @endif
                 <div class="p-4">
                     <h3 class="text-xl font-bold">{{ $property->title }}</h3>

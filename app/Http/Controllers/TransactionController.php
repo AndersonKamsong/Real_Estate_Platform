@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Property;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
@@ -22,5 +23,11 @@ class TransactionController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Transaction recorded successfully.');
+    }
+    // Display the buyer's transactions
+    public function index()
+    {
+        $transactions = Auth::user()->transactions()->with('property')->latest()->get();
+        return view('buyer.transactions', compact('transactions'));
     }
 }

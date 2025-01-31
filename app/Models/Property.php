@@ -52,4 +52,9 @@ class Property extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+     // Check if the property is favorited by a user
+     public function isFavoritedBy($user)
+     {
+         return $this->favorites->contains('user_id', $user->id);
+     }
 }
