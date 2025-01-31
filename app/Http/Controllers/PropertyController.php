@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Property;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Models\Transaction;
+use Illuminate\Support\Facades\Auth;
+
 
 class PropertyController extends Controller
 {
@@ -156,5 +159,48 @@ class PropertyController extends Controller
     {
         $property->delete();
         return redirect()->route('properties.index')->with('success', 'Property deleted successfully.');
+    }
+
+    // Other methods...
+    public function rent(Property $property)
+    {
+        // Check if the property is available
+        if ($property->status !== 'available') {
+            return redirect()->back()->with('error', 'This property is no longer available.');
+        }
+
+        // Update the property status
+        $property->update(['status' => 'rented']);
+
+        // Record the transaction
+        Transaction::create([
+            'user_id' => Auth::id(),
+            'property_id' => $property->id,
+            'type' => 'rented',
+            'transaction_date' => now(),
+        ]);
+
+        return redirect()->route('properties.show', $property->id)->with('success', 'You have successfully rented this property!');
+    }
+
+    public function buy(Property $property)
+    {
+        // Check if the property is available
+        if ($property->status !== 'available') {
+            return redirect()->back()->with('error', 'This property is no longer available.');
+        }
+
+        // Update the property status
+        $property->update(['status' => 'sold']);
+
+        // Record the transaction
+        Transaction::create([
+            'user_id' => Auth::id(),
+            'property_id' => $property->id,
+            'type' => 'sold',
+            'transaction_date' => now(),
+        ]);
+
+        return redirect()->route('properties.show', $property->id)->with('success', 'You have successfully bought this property!');
     }
 }

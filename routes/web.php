@@ -3,6 +3,12 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\PropertyController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\AboutController;
+use App\Http\Controllers\ContactController;
+use App\Http\Controllers\BuyerController;
+
 // Route::get('/', function () {
 //     return view('welcome');
 // });
@@ -17,12 +23,6 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-use App\Http\Controllers\PropertyController;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\AboutController;
-use App\Http\Controllers\ContactController;
-
-
 
 // Home Page
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -33,7 +33,9 @@ Route::post('/properties', [PropertyController::class, 'index'])->name('properti
 
 // Property Details Page
 Route::get('/properties/{property}', [PropertyController::class, 'show'])->name('properties.show');
-
+// Rent/Buy Routes
+Route::post('/properties/{property}/rent', [PropertyController::class, 'rent'])->name('properties.rent')->middleware('auth');
+Route::post('/properties/{property}/buy', [PropertyController::class, 'buy'])->name('properties.buy')->middleware('auth');
 // About Us Page
 Route::get('/about', [AboutController::class, 'index'])->name('about');
 
@@ -41,13 +43,24 @@ Route::get('/about', [AboutController::class, 'index'])->name('about');
 Route::get('/contact', [ContactController::class, 'index'])->name('contact');
 Route::post('/contact', [ContactController::class, 'submit'])->name('contact.submit');
 
-use App\Http\Controllers\BuyerController;
 
 Route::middleware('auth')->group(function () {
+    // Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->name('buyer.dashboard');
+    // Route::get('/buyer/favorites', [BuyerController::class, 'favorites'])->name('buyer.favorites');
+    // Route::get('/buyer/view-history', [BuyerController::class, 'viewHistory'])->name('buyer.view-history');
+    // Route::get('/buyer/saved-searches', [BuyerController::class, 'savedSearches'])->name('buyer.saved-searches');
+    
+    // Buyer Dashboard
     Route::get('/buyer/dashboard', [BuyerController::class, 'dashboard'])->name('buyer.dashboard');
+    // Favorites
     Route::get('/buyer/favorites', [BuyerController::class, 'favorites'])->name('buyer.favorites');
+    // View History
     Route::get('/buyer/view-history', [BuyerController::class, 'viewHistory'])->name('buyer.view-history');
+    // Saved Searches
     Route::get('/buyer/saved-searches', [BuyerController::class, 'savedSearches'])->name('buyer.saved-searches');
+    // Inquiry
+    Route::get('/properties/{property}/inquiry', [BuyerController::class, 'inquiry'])->name('buyer.inquiry');
+    Route::post('/inquiries', [BuyerController::class, 'storeInquiry'])->name('inquiries.store');
 });
 
 require __DIR__.'/auth.php';
