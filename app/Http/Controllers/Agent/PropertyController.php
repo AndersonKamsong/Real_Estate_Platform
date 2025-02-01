@@ -55,8 +55,10 @@ class PropertyController extends Controller
                 $property->images()->create(['image_path' => $path]);
             }
         }
-
-        return redirect()->route('agent.properties.index')->with('success', 'Property added successfully!');
+        if (Auth::user()->role == 'admin')
+            return redirect()->route('admin.properties.index')->with('success', 'Property added successfully!');
+        else
+            return redirect()->route('agent.properties.index')->with('success', 'Property added successfully!');
     }
 
     public function edit(Property $property)
@@ -98,7 +100,10 @@ class PropertyController extends Controller
             }
         }
 
-        return redirect()->route('agent.properties.index')->with('success', 'Property updated successfully!');
+        if (Auth::user()->role == 'admin')
+            return redirect()->route('admin.properties.index')->with('success', 'Property updated successfully!');
+        else
+            return redirect()->route('agent.properties.index')->with('success', 'Property updated successfully!');
     }
 
     public function destroy(Property $property)
@@ -108,6 +113,9 @@ class PropertyController extends Controller
         }
 
         $property->delete();
-        return redirect()->route('agent.properties.index')->with('success', 'Property deleted successfully!');
+        if (Auth::user()->role == 'admin')
+            return redirect()->route('admin.properties.index')->with('success', 'Property deleted successfully!');
+        else
+            return redirect()->route('agent.properties.index')->with('success', 'Property deleted successfully!');
     }
 }

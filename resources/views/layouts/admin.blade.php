@@ -1,12 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Real Estate') }}</title>
+    <title>{{ config('app.name', 'Laravel') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -15,7 +14,6 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-
 <body class="font-sans antialiased">
     <div class="min-h-screen bg-gray-100">
         <!-- Navigation -->
@@ -25,47 +23,36 @@
                     <div class="flex">
                         <!-- Logo -->
                         <div class="shrink-0 flex items-center">
-                            <a href="{{ route('home') }}">
+                            <a href="{{ route('admin.dashboard') }}">
                                 <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
                             </a>
                         </div>
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                            <x-nav-link :href="route('home')" :active="request()->routeIs('home')">
-                                {{ __('Home') }}
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('admin.dashboard')">
+                                {{ __('Dashboard') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('properties.index')" :active="request()->routeIs('properties.index')">
-                                {{ __('Properties') }}
+                            <x-nav-link :href="route('admin.users.index')" :active="request()->routeIs('admin.users.index')">
+                                {{ __('Manage Users') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('about')" :active="request()->routeIs('about')">
-                                {{ __('About Us') }}
+                            <x-nav-link :href="route('admin.properties.index')" :active="request()->routeIs('admin.properties.index')">
+                                {{ __('Manage Properties') }}
                             </x-nav-link>
-                            <x-nav-link :href="route('contact')" :active="request()->routeIs('contact')">
-                                {{ __('Contact Us') }}
+                            <x-nav-link :href="route('admin.transactions.index')" :active="request()->routeIs('admin.transactions.index')">
+                                {{ __('View Transactions') }}
                             </x-nav-link>
-                            @auth
-                            @if(Auth::user()->role == 'admin' || Auth::user()->role == 'admin')
-                            <x-nav-link :href="route('agent.dashboard')" :active="request()->routeIs('agent.transactions')">
+                            <x-nav-link :href="route('agent.dashboard')" :active="request()->routeIs('admin.settings')">
                                 {{ __('Agent Dashboard') }}
                             </x-nav-link>
-                            @if(Auth::user()->role == 'admin')
-                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('agent.transactions')">
-                                {{ __('Admin Dashboard') }}
+                            <x-nav-link :href="route('admin.settings')" :active="request()->routeIs('admin.settings')">
+                                {{ __('Platform Settings') }}
                             </x-nav-link>
-                            @endif
-                            @else
-                            <x-nav-link :href="route('buyer.dashboard')" :active="request()->routeIs('agent.transactions')">
-                                {{ __('Buyer Dashboard') }}
-                            </x-nav-link>
-                            @endif
-                            @endauth
                         </div>
                     </div>
 
                     <!-- Authentication Links -->
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
-                        @auth
                         <x-dropdown align="right" width="48">
                             <x-slot name="trigger">
                                 <button class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
@@ -79,27 +66,19 @@
                             </x-slot>
 
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('buyer.dashboard')">
+                                <x-dropdown-link :href="route('admin.dashboard')">
                                     {{ __('Dashboard') }}
                                 </x-dropdown-link>
                                 <form method="POST" action="{{ route('logout') }}">
                                     @csrf
                                     <x-dropdown-link :href="route('logout')"
-                                        onclick="event.preventDefault();
-                                                            this.closest('form').submit();">
+                                            onclick="event.preventDefault();
+                                                        this.closest('form').submit();">
                                         {{ __('Log Out') }}
                                     </x-dropdown-link>
                                 </form>
                             </x-slot>
                         </x-dropdown>
-                        @else
-                        <x-nav-link :href="route('login')">
-                            {{ __('Log in') }}
-                        </x-nav-link>
-                        <x-nav-link :href="route('register')">
-                            {{ __('Register') }}
-                        </x-nav-link>
-                        @endauth
                     </div>
                 </div>
             </div>
@@ -111,5 +90,4 @@
         </main>
     </div>
 </body>
-
 </html>

@@ -44,6 +44,11 @@
                             <x-nav-link :href="route('agent.transactions')" :active="request()->routeIs('agent.transactions')">
                                 {{ __('Transactions') }}
                             </x-nav-link>
+                            @if(Auth::user()->role == 'admin')
+                            <x-nav-link :href="route('admin.dashboard')" :active="request()->routeIs('agent.transactions')">
+                                {{ __('Admin Dashboard') }}
+                            </x-nav-link>
+                            @endif
                         </div>
                     </div>
 

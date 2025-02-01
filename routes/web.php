@@ -103,6 +103,32 @@ Route::prefix('agent')->middleware('auth')->group(function () {
     Route::get('/transactions', [AgentTransactionController::class, 'index'])->name('agent.transactions');
 });
 
+// routes/web.php
 
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SettingsController;
+
+Route::prefix('admin')->middleware('auth')->group(function () {
+    Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::put('/users/{user}/edit', [UserController::class, 'edit'])->name('admin.users.edit');
+    Route::delete('/users/{user}', [UserController::class, 'destroy'])->name('admin.users.destroy');
+
+    Route::get('/properties', [AdminPropertyController::class, 'index'])->name('admin.properties.index');
+    // Route::put('/properties/{property}/edit', [AdminPropertyController::class, 'index'])->name('admin.properties.edit');
+    // Route::delete('/properties/{property}', [AdminPropertyController::class, 'index'])->name('admin.properties.destroy');
+    
+    // Route::get('/categories', [CategoryController::class, 'index'])->name('admin.categories.index');
+    
+    Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('admin.transactions.index');
+    // Route::resource('/categories', CategoryController::class)->name('admin.dashboard');
+    // Route::resource('/transactions', AdminTransactionController::class)->name('admin.dashboard');
+    Route::get('/settings', [SettingsController::class, 'index'])->name('admin.settings');
+    Route::post('/settings', [SettingsController::class, 'update'])->name('admin.settings.update');
+});
 
 require __DIR__ . '/auth.php';
